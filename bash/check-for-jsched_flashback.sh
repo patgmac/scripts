@@ -3,7 +3,7 @@
 # check-for-jsched_flashback.sh
 # Patrick Gallagher | Emory College
 #
-# Checks for a variant of Flashback.k which installs a com.sun.jsched.plist
+# Checks for (and deletes) a variant of Flashback.k which installs a com.sun.jsched.plist
 # file in the users Library/LaunchAgents and executes a hidden file .jsched in ~/. 
 
 # Check for root
