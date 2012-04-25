@@ -9,6 +9,7 @@
 *.o
 *.so
 *.app
+SymantecRemovalTool.command
 
 # Packages #
 ############
