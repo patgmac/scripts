@@ -58,7 +58,7 @@ fi
 # Uncompress $pkgTar
 if [ -e "${pkgTar}" ]; then
 	echo "Uncompressing "${pkgTar}"" 
-	tar -xzvf "${pkgTar}" &>install.sh.out
+	tar -xzvf "${pkgTar}" &>mcafee_untar.out
 else 
 	echo
 	echo "*** ERROR: Did not find "${pkgTar}".  Place this script in same folder as "${pkgTar}" ***"
@@ -78,8 +78,7 @@ if [ -e "${pkgName}" ]; then
 			echo "*** Did not find SymantecRemovalTool.command, please uninstall Symantec separately ***"
 		fi
 	fi
-	echo
-	echo "Found "${pkgName}", installing"
+	echo "Installing "${pkgName}"..."
 	sudo installer -pkg "${pkgName}" -target / &>ePO_install.out
 	rm -rf "${pkgName}"
 else
