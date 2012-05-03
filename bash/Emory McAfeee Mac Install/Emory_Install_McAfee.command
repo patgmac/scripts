@@ -3,10 +3,15 @@
 # Emory University McAfee ePO installer
 # Author: Patrick Gallagher - Emory College of Arts & Sciences
 # Created: 4/18/2012
+<<<<<<< HEAD
 # Modified: 4/25/2012
+=======
+# Modified: 4/26/2012
+>>>>>>> Updates
 Version=0.3
 
 # Instructions: Verify the variables for pkgTar and pkgName are correct.
+# Also the var for sha1
 # If you want SEP/SAV uninstalled as well, also include SymantecRemovalTool.command
 # in the same directory. 
 # http://www.symantec.com/business/support/index?page=content&id=TECH103489
@@ -17,7 +22,14 @@ pkgTar="McAfeeSecurityForMac-1.1-ePO-1309.mpkg.tar.gz"
 pkgName="McAfeeSecurityForMac-1.1-ePO-1309.mpkg"
 installScript="install.sh"
 
-# Set your CustomProps
+# Get the sha1 with command: openssl sha1 install.sh
+sha1=ac6ed3dafb8c3b21578ff43bb506b4cfcd463918
+
+#  Set your Custom group, not necessary for AD-bound machines but doesn't hurt to set this.
+#  Available groups:
+# "CampusLife", "CampusServices", "College", "Dar", "GBS", "Law", "Library", "Oxford", "Physics", "RSPH", "SOM-Dom", "SOM-ITS"
+# "SOM-Genetics", "SOM-Neurology", "SOM-Pathology", "SOM-Pediatrics", "SOM-Pharmacology", "SOM-Physiology", "SOM-psychiatry"
+# "SOM-Surgury", "Son", "Student", "Theology", "UTS", "UTS-ATS", "Yerkes", "Other"
 CustomProps4="Student"
 
 scriptDir=$(dirname "$0")
@@ -38,15 +50,27 @@ RunAsRoot()
 RunAsRoot "${0}"
 
 # Setting hostname to match computer name
-sudo scutil --set HostName `scutil --get ComputerName`
+compname=`scutil --get ComputerName`
+sudo scutil --set HostName "${compname}"
 echo "Hostname set to `scutil --get HostName`"
 
+<<<<<<< HEAD
 cd "${scriptDir}/${subFolder}"
 # Check for existing McAfee agent
 # Uninstall if found
 if [ -e /Library/McAfee/cma/install.sh ]; then
 	echo "Found an existing McAfee agent, uninstalling...
 	sudo sh /Library/McAfee/cma/install.sh &>mcafee_uninstall.out
+=======
+
+cd "${scriptDir}/${subFolder}"
+
+# Verify install.sh wasn't damaged or tampered with
+sha2=`openssl sha1 install.sh | awk '{print $2}'`
+if [ $sha1 != $sha2 ]; then
+	echo "SHA1 doesn't match for install.sh"
+	exit 1
+>>>>>>> Updates
 fi
 
 # Start install.sh

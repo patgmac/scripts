@@ -1,17 +1,15 @@
 #!/bin/sh
 
-# rebind_AD.sh
-# Patrick Gallagher | patgmac at gmail dot com
-# http://blog.macadmincorner.com
-
+## bind_to_AD_10.5.sh
+##
 ## Purpose: Unbind and rebind to AD to correct computer name in AD
+## 10.5 and 10.6
 ## Much of this borrowed from DeployStudio bind script
 
-# Usage: rebind_AD.sh newComputerName
+# Usage: bind_to_AD_10.5.sh newComputerName
 # If using Absolute Manage, enter computer name in "command line options"
 
 args=("$@")
-echo Computer will be renamed ${1}
 COMPUTER_ID="${1}"
 
 if [ ${#} -ne 1 ]
@@ -41,7 +39,12 @@ user_shell="/bin/bash"
 preferred="-nopreferred"	
 admingroups="EMORYUNIVAD\eccsls" # change to your domain and AD group
 check4AD=`dscl localhost -list /Active\ Directory`
+OS=`/usr/bin/sw_vers | grep ProductVersion | cut -c 17-20`
 
+if [[ "${OS}" != "10.5" || "10.6" ]]; then
+	echo "This script is only for 10.5 and 10.6"
+	exit 1
+fi
 
 # Unbind from AD
 if [[ "${check4AD}" == "All Domains" || "$AD_DOMAIN" ]]; then
@@ -57,6 +60,7 @@ if [[ "${check4AD}" == "All Domains" || "$AD_DOMAIN" ]]; then
 fi
 
 # set computer names
+echo Computer will be renamed ${1}
 scutil --set ComputerName $COMPUTER_ID
 scutil --set LocalHostName $COMPUTER_ID
 scutil --set HostName $COMPUTER_ID
