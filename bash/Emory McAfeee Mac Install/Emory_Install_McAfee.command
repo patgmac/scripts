@@ -4,7 +4,7 @@
 # Author: Patrick Gallagher - Emory College of Arts & Sciences
 # Created: 4/18/2012
 # Modified: 4/25/2012
-Version=0.2
+Version=0.3
 
 # Instructions: Verify the variables for pkgTar and pkgName are correct.
 # If you want SEP/SAV uninstalled as well, also include SymantecRemovalTool.command
@@ -41,8 +41,15 @@ RunAsRoot "${0}"
 sudo scutil --set HostName `scutil --get ComputerName`
 echo "Hostname set to `scutil --get HostName`"
 
-# Start install.sh
 cd "${scriptDir}/${subFolder}"
+# Check for existing McAfee agent
+# Uninstall if found
+if [ -e /Library/McAfee/cma/install.sh ]; then
+	echo "Found an existing McAfee agent, uninstalling...
+	sudo sh /Library/McAfee/cma/install.sh &>mcafee_uninstall.out
+fi
+
+# Start install.sh
 if [ -e "${installScript}" ]; then
 	echo "Found install.sh, running..."
 	sudo sh "${installScript}" -i &>install.sh.out
@@ -54,6 +61,7 @@ fi
 
 # Set CustomProps4
 /Library/McAfee/cma/bin/msaconfig -CustomProps4 "${CustomProps4}"
+/Library/McAfee/cma/bin/cmdagent -P
 
 # Uncompress $pkgTar
 if [ -e "${pkgTar}" ]; then
