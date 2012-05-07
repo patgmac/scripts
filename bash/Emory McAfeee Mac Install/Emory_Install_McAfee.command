@@ -3,21 +3,18 @@
 # Emory University McAfee ePO installer
 # Author: Patrick Gallagher - Emory College of Arts & Sciences
 # Created: 4/18/2012
-<<<<<<< HEAD
-# Modified: 4/25/2012
-=======
-# Modified: 4/26/2012
->>>>>>> Updates
-Version=0.3
+# Modified: 05/04/2012
+Version=0.4
 
 # Instructions: Verify the variables for pkgTar and pkgName are correct.
-# Also the var for sha1
+# Local support folks should specify correct group for CustomProps4
+
 # If you want SEP/SAV uninstalled as well, also include SymantecRemovalTool.command
-# in the same directory. 
+# in the SupportFiles directory 
 # http://www.symantec.com/business/support/index?page=content&id=TECH103489
 
 clear
-# Use relative paths
+# Specify file names for the tar and mpkg
 pkgTar="McAfeeSecurityForMac-1.1-ePO-1309.mpkg.tar.gz"
 pkgName="McAfeeSecurityForMac-1.1-ePO-1309.mpkg"
 installScript="install.sh"
@@ -54,14 +51,13 @@ compname=`scutil --get ComputerName`
 sudo scutil --set HostName "${compname}"
 echo "Hostname set to `scutil --get HostName`"
 
-<<<<<<< HEAD
 cd "${scriptDir}/${subFolder}"
 # Check for existing McAfee agent
 # Uninstall if found
-if [ -e /Library/McAfee/cma/install.sh ]; then
-	echo "Found an existing McAfee agent, uninstalling...
-	sudo sh /Library/McAfee/cma/install.sh &>mcafee_uninstall.out
-=======
+if [ -e /Library/McAfee/cma/uninstall.sh ]; then
+	echo "Found an existing McAfee agent, uninstalling..."
+	sudo sh /Library/McAfee/cma/uninstall.sh &>mcafee_uninstall.out
+fi
 
 cd "${scriptDir}/${subFolder}"
 
@@ -70,12 +66,11 @@ sha2=`openssl sha1 install.sh | awk '{print $2}'`
 if [ $sha1 != $sha2 ]; then
 	echo "SHA1 doesn't match for install.sh"
 	exit 1
->>>>>>> Updates
 fi
 
 # Start install.sh
 if [ -e "${installScript}" ]; then
-	echo "Found install.sh, running..."
+	echo "Installing the McAfee agent..."
 	sudo sh "${installScript}" -i &>install.sh.out
 	sleep 15
 else 
@@ -85,7 +80,6 @@ fi
 
 # Set CustomProps4
 /Library/McAfee/cma/bin/msaconfig -CustomProps4 "${CustomProps4}"
-/Library/McAfee/cma/bin/cmdagent -P
 
 # Uncompress $pkgTar
 if [ -e "${pkgTar}" ]; then
@@ -111,7 +105,7 @@ if [ -e "${pkgName}" ]; then
 		fi
 	fi
 	echo "Installing "${pkgName}"..."
-	sudo installer -pkg "${pkgName}" -target / &>ePO_install.out
+	sudo installer -pkg "${pkgName}" -target / &>mcafee_security_install.out
 	rm -rf "${pkgName}"
 else
 	echo
@@ -119,6 +113,9 @@ else
 	echo
 	exit 1
 fi
+
+# Update status on ePO
+/Library/McAfee/cma/bin/cmdagent -P -C -E
 
 echo
 echo "## Install Complete. You can close this window ##"
