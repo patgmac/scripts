@@ -3,8 +3,8 @@
 # Emory University McAfee ePO installer
 # Author: Patrick Gallagher - Emory College of Arts & Sciences
 # Created: 4/18/2012
-# Modified: 05/04/2012
-Version=0.4
+# Modified: 05/24/2012
+Version=0.5
 
 # Instructions: Verify the variables for pkgTar and pkgName are correct.
 # Local support folks should specify correct group for CustomProps4
@@ -27,7 +27,7 @@ sha1=ac6ed3dafb8c3b21578ff43bb506b4cfcd463918
 # "CampusLife", "CampusServices", "College", "Dar", "GBS", "Law", "Library", "Oxford", "Physics", "RSPH", "SOM-Dom", "SOM-ITS"
 # "SOM-Genetics", "SOM-Neurology", "SOM-Pathology", "SOM-Pediatrics", "SOM-Pharmacology", "SOM-Physiology", "SOM-psychiatry"
 # "SOM-Surgury", "Son", "Student", "Theology", "UTS", "UTS-ATS", "Yerkes", "Other"
-CustomProps4="Student"
+CustomProps4="Law"
 
 scriptDir=$(dirname "$0")
 subFolder="SupportFiles"
@@ -51,15 +51,34 @@ compname=`scutil --get ComputerName`
 sudo scutil --set HostName "${compname}"
 echo "Hostname set to `scutil --get HostName`"
 
+# Setup logging
+LogLoc=/Library/Logs/Emory_McAfee_Install.log
+if [ -e "${LogLoc}" ]; then
+	echo >> "${LogLoc}"
+	echo >> "${LogLoc}"
+	echo >> "${LogLoc}"
+	echo "<<< *** New Install Log for `scutil --get HostName`: `date` *** >>>" >> "${LogLoc}"
+	echo >> "${LogLoc}"
+	echo >> "${LogLoc}"
+	echo >> "${LogLoc}"
+else
+	echo "<<< *** New Install Log for `scutil --get HostName`: `date` *** >>>" > "${LogLoc}"
+	echo >> "${LogLoc}"
+	echo >> "${LogLoc}"
+	echo >> "${LogLoc}"
+fi
+
 cd "${scriptDir}/${subFolder}"
 # Check for existing McAfee agent
 # Uninstall if found
 if [ -e /Library/McAfee/cma/uninstall.sh ]; then
 	echo "Found an existing McAfee agent, uninstalling..."
-	sudo sh /Library/McAfee/cma/uninstall.sh &>mcafee_uninstall.out
+	echo >> "${LogLoc}"
+	echo >> "${LogLoc}"
+	echo >> "${LogLoc}"
+	echo "<<< *** Log for McAfee Uninstall: `date` *** >>>" >> "${LogLoc}"
+	sudo sh /Library/McAfee/cma/uninstall.sh >>"${LogLoc}" 2>&1 
 fi
-
-cd "${scriptDir}/${subFolder}"
 
 # Verify install.sh wasn't damaged or tampered with
 sha2=`openssl sha1 install.sh | awk '{print $2}'`
@@ -71,7 +90,11 @@ fi
 # Start install.sh
 if [ -e "${installScript}" ]; then
 	echo "Installing the McAfee agent..."
-	sudo sh "${installScript}" -i &>install.sh.out
+	echo >> "${LogLoc}"
+	echo >> "${LogLoc}"
+	echo >> "${LogLoc}"
+	echo "<<< *** Log for McAfee agent install: `date` *** >>>" >> "${LogLoc}"
+	sudo sh "${installScript}" -i >>"${LogLoc}" 2>&1 
 	sleep 15
 else 
 	echo "*** ERROR: Did not find install.sh. Place this script in same folder as install.sh ***"
@@ -84,7 +107,11 @@ fi
 # Uncompress $pkgTar
 if [ -e "${pkgTar}" ]; then
 	echo "Uncompressing "${pkgTar}"" 
-	tar -xzvf "${pkgTar}" &>mcafee_untar.out
+	echo >> "${LogLoc}"
+	echo >> "${LogLoc}"
+	echo >> "${LogLoc}"
+	echo "<<< *** Log for McAfee software uncompression: `date` *** >>>" >> "${LogLoc}"
+	tar -xzvf "${pkgTar}" >> "${LogLoc}" 2>&1 
 else 
 	echo
 	echo "*** ERROR: Did not find "${pkgTar}".  Place this script in same folder as "${pkgTar}" ***"
@@ -98,14 +125,22 @@ if [ -e "${pkgName}" ]; then
 	if [ -d "/Applications/Symantec Solutions" ]; then
 		echo "Found Symantec, uninstalling..."
 		if [ -e SymantecRemovalTool.command ]; then
-			sudo sh SymantecRemovalTool.command &>Symantec_Uninstall.out
+			echo >> "${LogLoc}"
+		echo >> "${LogLoc}"
+		echo >> "${LogLoc}"
+		echo "<<< *** Log for Symantec Uninstall: `date` *** >>>" >> "${LogLoc}"
+			sudo sh SymantecRemovalTool.command >>"${LogLoc}" 2>&1 
 			echo "Symantec uninstalled"
 		else
 			echo "*** Did not find SymantecRemovalTool.command, please uninstall Symantec separately ***"
 		fi
 	fi
 	echo "Installing "${pkgName}"..."
-	sudo installer -pkg "${pkgName}" -target / &>mcafee_security_install.out
+	echo >> "${LogLoc}"
+	echo >> "${LogLoc}"
+	echo >> "${LogLoc}"
+	echo "<<< *** Log for McAfee VirusScan Install: `date` *** >>>" >> "${LogLoc}"
+	sudo installer -pkg "${pkgName}" -target / >>"${LogLoc}" 2>&1 
 	rm -rf "${pkgName}"
 else
 	echo
@@ -115,7 +150,7 @@ else
 fi
 
 # Update status on ePO
-/Library/McAfee/cma/bin/cmdagent -P -C -E
+sudo /Library/McAfee/cma/bin/cmdagent -P -C -E
 
 echo
 echo "## Install Complete. You can close this window ##"
