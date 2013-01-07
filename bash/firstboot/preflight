@@ -1,0 +1,6 @@
+#!/bin/sh
+
+if [ -e /Users/Shared/.networkup.txt ]; then
+	rm -f /Users/Shared/.networkup.txt
+fi
+exit 0
