@@ -425,7 +425,7 @@
 			<key>POSTINSTALL_PATH</key>
 			<dict>
 				<key>PATH</key>
-				<string>/Users/pgalla2/src/scripts/bash/Emory McAfeee Mac Install/Emory_Install_McAfee.command</string>
+				<string>/Users/pgalla2/src/scripts/bash/Emory McAfeee Mac Install/Emory McAfee VSM/Emory_Install_McAfee_VSM.command</string>
 				<key>PATH_TYPE</key>
 				<integer>0</integer>
 			</dict>
@@ -439,7 +439,7 @@
 					<key>GID</key>
 					<integer>0</integer>
 					<key>PATH</key>
-					<string>/Users/pgalla2/src/scripts/bash/Emory McAfeee Mac Install/SupportFiles</string>
+					<string>/Users/pgalla2/src/scripts/bash/Emory McAfeee Mac Install/Emory McAfee VSM/SupportFiles</string>
 					<key>PATH_TYPE</key>
 					<integer>0</integer>
 					<key>PERMISSIONS</key>
@@ -458,7 +458,7 @@
 			<key>CONCLUSION_ACTION</key>
 			<integer>0</integer>
 			<key>IDENTIFIER</key>
-			<string>edu.emory.college.pkg.Emory McAfee</string>
+			<string>edu.emory.college.pkg.Emory McAfee VSE 0.9</string>
 			<key>OVERWRITE_PERMISSIONS</key>
 			<false/>
 			<key>VERSION</key>
@@ -632,7 +632,7 @@
 				</dict>
 			</array>
 			<key>NAME</key>
-			<string>Emory McAfee</string>
+			<string>Emory McAfee VSM 0.9 SOM-Dom</string>
 		</dict>
 	</dict>
 	<key>TYPE</key>
