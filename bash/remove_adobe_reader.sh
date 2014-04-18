@@ -3,7 +3,7 @@
 #remove_adobe_reader.sh
 
 rm -rf "/Applications/Adobe Reader.app"
-rm -rf "/Library/Internet Plug-ins/AdobePDFViewer.plugin"
+rm -rf /Library/Internet\ Plug-Ins/AdobePDF*
 rm -f "/Library/Application Support/Adobe/HelpCfg/en_US/Reader.helpcfg"
 
 pkgutil --forget com.adobe.acrobat.reader.10.reader.app.pkg.en_US
@@ -18,3 +18,4 @@ pkgutil --forget com.adobe.acrobat.reader.11004.reader.browser.pkg.en_US
 pkgutil --forget com.adobe.acrobat.reader.11006.reader.app.pkg.en_US
 pkgutil --forget com.adobe.acrobat.reader.11006.reader.appsupport.pkg.en_US
 pkgutil --forget com.adobe.acrobat.reader.11006.reader.browser.pkg.en_US
+exit 0
