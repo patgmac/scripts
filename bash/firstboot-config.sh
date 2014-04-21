@@ -102,5 +102,5 @@ if [[ ${osvers} -ge 7 ]]; then
     defaults write "${USER_TEMPLATE}"/Library/Preferences/com.apple.SetupAssistant GestureMovieSeen none
     defaults write "${USER_TEMPLATE}"/Library/Preferences/com.apple.SetupAssistant LastSeenCloudProductVersion "${sw_vers}"
   done
-
+fi
 exit 0
