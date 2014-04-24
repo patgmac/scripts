@@ -103,4 +103,8 @@ if [[ ${osvers} -ge 7 ]]; then
     defaults write "${USER_TEMPLATE}"/Library/Preferences/com.apple.SetupAssistant LastSeenCloudProductVersion "${sw_vers}"
   done
 fi
+
+# Hide Boot Camp Assistant
+chflags hidden /Applications/Utilities/Boot\ Camp\ Assistant.app
+
 exit 0
