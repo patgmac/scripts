@@ -93,6 +93,9 @@ defaults write "/Library/Preferences/com.apple.alf" globalstate -int 1
 # Energy Saver settings
 /usr/bin/pmset -a displaysleep 10 disksleep 10 -b sleep 15 -a womp 1 -c sleep 0
 
+# Hide Boot Camp Assistant
+chflags hidden /Applications/Utilities/Boot\ Camp\ Assistant.app
+
 # Kill iCloud assistant
 if [[ ${osvers} -ge 7 ]]; then
 
