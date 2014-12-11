@@ -2,7 +2,7 @@
 
 # Emory College fistboot-config.sh script 
 # Created 11/11/2010
-# Modified 04/21/2014
+# Modified 09/11/2014
 
 localAdmin=eccsadmin
 ntpserver="ntp.service.emory.edu"
@@ -10,6 +10,8 @@ timezone="America/New_York"
 
 osvers=$(sw_vers -productVersion | awk -F. '{print $2}')
 sw_vers=$(sw_vers -productVersion)
+
+/usr/bin/update_dyld_shared_cache -force
 
 # Config networking
 networksetup -detectnewhardware
@@ -84,8 +86,8 @@ defaults write "/Library/Preferences/com.apple.TimeMachine" AutoBackup 0
 ntpdate -bvs ${ntpserver}
  
 # Enable firewall
-defaults write "/Library/Preferences/com.apple.alf" globalstate -int 1
-/usr/libexec/ApplicationFirewall/socketfilterfw -k
+#defaults write "/Library/Preferences/com.apple.alf" globalstate -int 1
+#/usr/libexec/ApplicationFirewall/socketfilterfw -k
 
 # Allow admin users to add printers
 /usr/sbin/dseditgroup -o edit -a admin -t group _lpadmin
@@ -97,15 +99,7 @@ defaults write "/Library/Preferences/com.apple.alf" globalstate -int 1
 chflags hidden /Applications/Utilities/Boot\ Camp\ Assistant.app
 
 # Kill iCloud assistant
-if [[ ${osvers} -ge 7 ]]; then
-
- for USER_TEMPLATE in "/System/Library/User Template"/*
-  do
-    defaults write "${USER_TEMPLATE}"/Library/Preferences/com.apple.SetupAssistant DidSeeCloudSetup -bool TRUE
-    defaults write "${USER_TEMPLATE}"/Library/Preferences/com.apple.SetupAssistant GestureMovieSeen none
-    defaults write "${USER_TEMPLATE}"/Library/Preferences/com.apple.SetupAssistant LastSeenCloudProductVersion "${sw_vers}"
-  done
-fi
+defaults write "/System/Library/User Template/Non_localized/Library/Preferences/com.apple.SetupAssistant" DidSeeCloudSetup -bool TRUE
 
 # Hide Boot Camp Assistant
 chflags hidden /Applications/Utilities/Boot\ Camp\ Assistant.app
