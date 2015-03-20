@@ -2,7 +2,7 @@
 
 # Emory College fistboot-config.sh script 
 # Created 11/11/2010
-# Modified 04/21/2014
+# Modified 01/12/2015
 
 localAdmin=eccsadmin
 ntpserver="ntp.service.emory.edu"
@@ -10,6 +10,9 @@ timezone="America/New_York"
 
 osvers=$(sw_vers -productVersion | awk -F. '{print $2}')
 sw_vers=$(sw_vers -productVersion)
+sw_build=$(sw_vers -buildVersion)
+
+update_dyld_shared_cache -root /
 
 # Config networking
 networksetup -detectnewhardware
@@ -93,6 +96,9 @@ defaults write "/Library/Preferences/com.apple.alf" globalstate -int 1
 # Energy Saver settings
 /usr/bin/pmset -a displaysleep 10 disksleep 10 -b sleep 15 -a womp 1 -c sleep 0
 
+# Show system info at login window
+/usr/bin/defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
+
 # Kill iCloud assistant
 if [[ ${osvers} -ge 7 ]]; then
 
@@ -101,7 +107,30 @@ if [[ ${osvers} -ge 7 ]]; then
     defaults write "${USER_TEMPLATE}"/Library/Preferences/com.apple.SetupAssistant DidSeeCloudSetup -bool TRUE
     defaults write "${USER_TEMPLATE}"/Library/Preferences/com.apple.SetupAssistant GestureMovieSeen none
     defaults write "${USER_TEMPLATE}"/Library/Preferences/com.apple.SetupAssistant LastSeenCloudProductVersion "${sw_vers}"
+    defaults write "${USER_TEMPLATE}"/Library/Preferences/com.apple.SetupAssistant LastSeenBuddyBuildVersion "${sw_build}"
   done
+fi
+
+# Configuring diagnostic report settings.
+SUBMIT_DIAGNOSTIC_DATA_TO_APPLE=FALSE
+SUBMIT_DIAGNOSTIC_DATA_TO_APP_DEVELOPERS=FALSE
+
+if [[ ${osvers} -ge 10 ]]; then
+
+  CRASHREPORTER_SUPPORT="/Library/Application Support/CrashReporter"
+ 
+  if [ ! -d "${CRASHREPORTER_SUPPORT}" ]; then
+    mkdir "${CRASHREPORTER_SUPPORT}"
+    chmod 775 "${CRASHREPORTER_SUPPORT}"
+    chown root:admin "${CRASHREPORTER_SUPPORT}"
+  fi
+
+ /usr/bin/defaults write "$CRASHREPORTER_SUPPORT"/DiagnosticMessagesHistory AutoSubmit -boolean ${SUBMIT_DIAGNOSTIC_DATA_TO_APPLE}
+ /usr/bin/defaults write "$CRASHREPORTER_SUPPORT"/DiagnosticMessagesHistory AutoSubmitVersion -int 4
+ /usr/bin/defaults write "$CRASHREPORTER_SUPPORT"/DiagnosticMessagesHistory ThirdPartyDataSubmit -boolean ${SUBMIT_DIAGNOSTIC_DATA_TO_APP_DEVELOPERS}
+ /usr/bin/defaults write "$CRASHREPORTER_SUPPORT"/DiagnosticMessagesHistory ThirdPartyDataSubmitVersion -int 4
+ /bin/chmod a+r "$CRASHREPORTER_SUPPORT"/DiagnosticMessagesHistory.plist
+ /usr/sbin/chown root:admin "$CRASHREPORTER_SUPPORT"/DiagnosticMessagesHistory.plist
 fi
 
 # Hide Boot Camp Assistant
