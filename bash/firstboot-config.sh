@@ -2,7 +2,11 @@
 
 # Emory College fistboot-config.sh script 
 # Created 11/11/2010
+<<<<<<< HEAD
 # Modified 01/12/2015
+=======
+# Modified 09/11/2014
+>>>>>>> FETCH_HEAD
 
 localAdmin=eccsadmin
 ntpserver="ntp.service.emory.edu"
@@ -13,6 +17,8 @@ sw_vers=$(sw_vers -productVersion)
 sw_build=$(sw_vers -buildVersion)
 
 update_dyld_shared_cache -root /
+
+/usr/bin/update_dyld_shared_cache -force
 
 # Config networking
 networksetup -detectnewhardware
@@ -87,8 +93,8 @@ defaults write "/Library/Preferences/com.apple.TimeMachine" AutoBackup 0
 ntpdate -bvs ${ntpserver}
  
 # Enable firewall
-defaults write "/Library/Preferences/com.apple.alf" globalstate -int 1
-/usr/libexec/ApplicationFirewall/socketfilterfw -k
+#defaults write "/Library/Preferences/com.apple.alf" globalstate -int 1
+#/usr/libexec/ApplicationFirewall/socketfilterfw -k
 
 # Allow admin users to add printers
 /usr/sbin/dseditgroup -o edit -a admin -t group _lpadmin
@@ -96,6 +102,7 @@ defaults write "/Library/Preferences/com.apple.alf" globalstate -int 1
 # Energy Saver settings
 /usr/bin/pmset -a displaysleep 10 disksleep 10 -b sleep 15 -a womp 1 -c sleep 0
 
+<<<<<<< HEAD
 # Show system info at login window
 /usr/bin/defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
 
@@ -110,6 +117,13 @@ if [[ ${osvers} -ge 7 ]]; then
     defaults write "${USER_TEMPLATE}"/Library/Preferences/com.apple.SetupAssistant LastSeenBuddyBuildVersion "${sw_build}"
   done
 fi
+=======
+# Hide Boot Camp Assistant
+chflags hidden /Applications/Utilities/Boot\ Camp\ Assistant.app
+
+# Kill iCloud assistant
+defaults write "/System/Library/User Template/Non_localized/Library/Preferences/com.apple.SetupAssistant" DidSeeCloudSetup -bool TRUE
+>>>>>>> FETCH_HEAD
 
 # Configuring diagnostic report settings.
 SUBMIT_DIAGNOSTIC_DATA_TO_APPLE=FALSE
