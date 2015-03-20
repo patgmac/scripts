@@ -2,11 +2,9 @@
 
 # Emory College fistboot-config.sh script 
 # Created 11/11/2010
-<<<<<<< HEAD
 # Modified 01/12/2015
 =======
 # Modified 09/11/2014
->>>>>>> FETCH_HEAD
 
 localAdmin=eccsadmin
 ntpserver="ntp.service.emory.edu"
